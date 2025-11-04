@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "name": "Dr. Sarah Johnson",
+    "email": "sarah.johnson@college.edu",
+    "password": "faculty123",
+    "department": "Computer Science",
+    "phone": "+1-555-0101",
+    "office": "CS-101",
+    "courses": [1, 2]
+  },
+  {
+    "id": 2,
+    "name": "Prof. Michael Chen",
+    "email": "michael.chen@college.edu",
+    "password": "faculty123",
+    "department": "Mathematics",
+    "phone": "+1-555-0102",
+    "office": "MATH-205",
+    "courses": [2, 3]
+  },
+  {
+    "id": 3,
+    "name": "Dr. Emily Rodriguez",
+    "email": "emily.rodriguez@college.edu",
+    "password": "faculty123",
+    "department": "Physics",
+    "phone": "+1-555-0103",
+    "office": "PHYS-301",
+    "courses": [1, 3]
+  },
+  {
+    "id": 4,
+    "name": "Dr. priyanshu",
+    "email": "priyanshu724734@gmail.com",
+    "password": "faculty@123",
+    "department": "civil",
+    "phone": "9079869901",
+    "office": "PHYS-301",
+    "courses": [1,2,3,4]
+  }
+]

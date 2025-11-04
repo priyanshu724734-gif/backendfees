@@ -1,0 +1,46 @@
+[
+  {
+    "id": 1,
+    "name": "Data Structures and Algorithms",
+    "code": "CS-301",
+    "description": "Advanced data structures and algorithmic problem solving",
+    "credits": 3,
+    "semester": "Fall 2024",
+    "schedule": "Mon, Wed, Fri 10:00 AM - 11:00 AM",
+    "faculty_id": 1,
+    "students": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10,21,22,23,24,25,26,27,28,29,30,31,32,33]
+  },
+  {
+    "id": 2,
+    "name": "Calculus III",
+    "code": "MATH-301",
+    "description": "Multivariable calculus and vector analysis",
+    "credits": 4,
+    "semester": "Fall 2024",
+    "schedule": "Tue, Thu 2:00 PM - 3:30 PM",
+    "faculty_id": 2,
+    "students": [11, 12, 13, 14, 15, 16, 17, 18, 19, 20,21,22,23,24,25,26,27,28,29,30,31,32,33]
+  },
+  {
+    "id": 3,
+    "name": "Quantum Mechanics",
+    "code": "PHYS-401",
+    "description": "Introduction to quantum mechanical principles",
+    "credits": 3,
+    "semester": "Fall 2024",
+    "schedule": "Mon, Wed 1:00 PM - 2:00 PM",
+    "faculty_id": 3,
+    "students": [21, 22, 23, 24, 25, 26, 27, 28, 29, 30,31,32,33]
+  },
+  {
+    "id": 4,
+    "name": "civil",
+    "code": "civil-401",
+    "description": "Introduction to civil principles",
+    "credits": 3,
+    "semester": "Fall 2024",
+    "schedule": "Mon, Wed 1:00 PM - 2:00 PM",
+    "faculty_id": 4,
+    "students": [21,22,23,31, 32, 33]
+  }
+]

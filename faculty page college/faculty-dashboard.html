@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard - College Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .faculty-info {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .faculty-info h2 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e1e5e9;
+            padding-bottom: 0.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .info-value {
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .courses-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .courses-section h2 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #e1e5e9;
+            padding-bottom: 0.5rem;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .course-card {
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .course-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .course-code {
+            background: #667eea;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .course-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .course-details {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .course-details p {
+            margin-bottom: 0.25rem;
+        }
+
+        .student-count {
+            background: #f8f9fa;
+            padding: 0.5rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .no-courses {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 2rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 1rem;
+            }
+            
+            .faculty-info,
+            .courses-section {
+                padding: 1rem;
+            }
+            
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Faculty Dashboard</h1>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="container">
+        <div class="faculty-info">
+            <h2>Faculty Information</h2>
+            <div id="facultyDetails">
+                <div class="loading">Loading...</div>
+            </div>
+        </div>
+
+        <div class="courses-section">
+            <h2>My Courses</h2>
+            <div id="coursesList">
+                <div class="loading">Loading courses...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/config.js"></script>
+    <script src="scripts/backend.js"></script>
+    <script src="scripts/firebase.js"></script>
+    <script>
+        let currentFaculty = null;
+        let courses = [];
+        let students = [];
+
+        // Check if user is logged in
+        function checkAuth() {
+            const facultyData = sessionStorage.getItem('currentFaculty');
+            if (!facultyData) {
+                window.location.href = 'faculty-login.html';
+                return;
+            }
+            currentFaculty = JSON.parse(facultyData);
+        }
+
+        // Load faculty details
+        function loadFacultyDetails() {
+            const facultyDetailsDiv = document.getElementById('facultyDetails');
+            facultyDetailsDiv.innerHTML = `
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Name</span>
+                        <span class="info-value">${currentFaculty.name}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Email</span>
+                        <span class="info-value">${currentFaculty.email}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Department</span>
+                        <span class="info-value">${currentFaculty.department}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Phone</span>
+                        <span class="info-value">${currentFaculty.phone}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Office</span>
+                        <span class="info-value">${currentFaculty.office}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Courses Assigned</span>
+                        <span class="info-value">${currentFaculty.courses.length}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Load courses
+        async function loadCourses() {
+            try {
+                let facultyCourses = [];
+
+                // Try Vercel API (Upstash) first
+                if (window.AppBackendVercel) {
+                    const fetched = await window.AppBackendVercel.api.getCoursesByIds(currentFaculty.courses || []);
+                    const allStuds = await window.AppBackendVercel.api.getAllStudents();
+                    if (fetched && fetched.length) {
+                        courses = fetched;
+                        students = allStuds || [];
+                        facultyCourses = courses;
+                    }
+                }
+
+                // Then try Firestore
+                if (facultyCourses.length === 0 && window.AppBackend) {
+                    const ok = await window.AppBackend.init();
+                    if (ok && window.AppBackend.api.isEnabled()) {
+                        const fetched = await window.AppBackend.api.getCoursesByIds(currentFaculty.courses || []);
+                        const allStuds = await window.AppBackend.api.getAllStudents();
+                        courses = fetched || [];
+                        students = allStuds || [];
+                        facultyCourses = courses;
+                    }
+                }
+
+                // Fallback to JSON files
+                if (facultyCourses.length === 0) {
+                    const [coursesResponse, studentsResponse] = await Promise.all([
+                        fetch('database/courses.json'),
+                        fetch('database/students.json')
+                    ]);
+                    courses = await coursesResponse.json();
+                    students = await studentsResponse.json();
+                    facultyCourses = courses.filter(course => (currentFaculty.courses || []).includes(course.id));
+                }
+
+                displayCourses(facultyCourses);
+            } catch (error) {
+                console.error('Error loading courses:', error);
+                document.getElementById('coursesList').innerHTML = 
+                    '<div class="no-courses">Error loading courses. Please try again.</div>';
+            }
+        }
+
+        // Display courses
+        function displayCourses(facultyCourses) {
+            const coursesListDiv = document.getElementById('coursesList');
+            
+            if (facultyCourses.length === 0) {
+                coursesListDiv.innerHTML = '<div class="no-courses">No courses assigned to you yet.</div>';
+                return;
+            }
+
+            coursesListDiv.innerHTML = facultyCourses.map(course => {
+                const studentCount = course.students.length;
+                return `
+                    <div class="course-card" onclick="openCourse(${course.id})">
+                        <div class="course-code">${course.code}</div>
+                        <div class="course-name">${course.name}</div>
+                        <div class="course-details">
+                            <p><strong>Description:</strong> ${course.description}</p>
+                            <p><strong>Credits:</strong> ${course.credits}</p>
+                            <p><strong>Semester:</strong> ${course.semester}</p>
+                            <p><strong>Schedule:</strong> ${course.schedule}</p>
+                        </div>
+                        <div class="student-count">
+                            ${studentCount} Students Registered
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Open course details
+        function openCourse(courseId) {
+            sessionStorage.setItem('selectedCourseId', courseId);
+            window.location.href = 'course-details.html';
+        }
+
+        // Logout function
+        function logout() {
+            sessionStorage.removeItem('currentFaculty');
+            sessionStorage.removeItem('selectedCourseId');
+            window.location.href = 'faculty-login.html';
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            loadFacultyDetails();
+            loadCourses();
+        });
+    </script>
+</body>
+</html>

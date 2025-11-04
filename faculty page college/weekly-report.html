@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Report - College Management System</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="scripts/config.js"></script>
+    <script src="scripts/backend.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+        }
+
+        .back-btn, .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-left: 0.5rem;
+        }
+
+        .back-btn:hover, .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .report-controls {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group select, .form-group input {
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(86, 171, 47, 0.3);
+        }
+
+        .report-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .report-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 1rem;
+        }
+
+        .report-header h2 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .report-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .meta-label {
+            font-weight: 600;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .meta-value {
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .attendance-summary {
+            margin-bottom: 2rem;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-card {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 4px solid #667eea;
+        }
+
+        .summary-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .attendance-details {
+            margin-bottom: 2rem;
+        }
+
+        .attendance-details h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e1e5e9;
+            padding-bottom: 0.5rem;
+        }
+
+        .attendance-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        .attendance-table th,
+        .attendance-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .attendance-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .attendance-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-present {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-absent {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .daily-breakdown {
+            margin-bottom: 2rem;
+        }
+
+        .daily-breakdown h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e1e5e9;
+            padding-bottom: 0.5rem;
+        }
+
+        .day-card {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #667eea;
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .day-date {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .day-stats {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .day-students {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .student-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            background: white;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .no-data {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 2rem;
+        }
+
+        .download-section {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e1e5e9;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 1rem;
+            }
+            
+            .report-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .form-group {
+                width: 100%;
+            }
+            
+            .attendance-table {
+                font-size: 0.8rem;
+            }
+            
+            .attendance-table th,
+            .attendance-table td {
+                padding: 0.5rem;
+            }
+            
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media print {
+            .header,
+            .report-controls,
+            .download-section {
+                display: none;
+            }
+            
+            .container {
+                max-width: none;
+                padding: 0;
+            }
+            
+            .report-content {
+                box-shadow: none;
+                border: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Weekly Report</h1>
+        <div>
+            <button class="back-btn" onclick="goBack()">← Back</button>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="report-controls">
+            <div class="form-group">
+                <label for="weekSelect">Select Week:</label>
+                <select id="weekSelect" onchange="generateReport()">
+                    <option value="">Select a week...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="customStartDate">Or Custom Date Range:</label>
+                <input type="date" id="customStartDate" onchange="updateCustomRange()">
+            </div>
+            <div class="form-group">
+                <label for="customEndDate">To:</label>
+                <input type="date" id="customEndDate" onchange="updateCustomRange()">
+            </div>
+            <button class="btn btn-primary" onclick="generateReport()">Generate Report</button>
+        </div>
+
+        <div class="report-content" id="reportContent">
+            <div class="loading">Select a week to generate the report...</div>
+        </div>
+
+        <div class="download-section">
+            <button class="btn btn-success" onclick="downloadPDF()" id="downloadBtn" style="display: none;">
+                📄 Download PDF Report
+            </button>
+        </div>
+    </div>
+
+    <script src="scripts/firebase.js"></script>
+    <script>
+        let currentFaculty = null;
+        let selectedCourse = null;
+        let attendanceData = [];
+
+        // Check authentication and initialize
+        function checkAuth() {
+            const facultyData = sessionStorage.getItem('currentFaculty');
+            const courseId = sessionStorage.getItem('selectedCourseId');
+            
+            if (!facultyData || !courseId) {
+                window.location.href = 'faculty-login.html';
+                return;
+            }
+            
+            currentFaculty = JSON.parse(facultyData);
+            loadData();
+        }
+
+        // Load course and attendance data
+        async function loadData() {
+            try {
+                // Load courses from JSON (structure reference)
+                const coursesResponse = await fetch('database/courses.json');
+                const courses = await coursesResponse.json();
+
+                selectedCourse = courses.find(course => course.id == sessionStorage.getItem('selectedCourseId'));
+                if (!selectedCourse) {
+                    alert('Course not found');
+                    window.location.href = 'faculty-dashboard.html';
+                    return;
+                }
+
+                // Try Vercel API (Upstash) first
+                let records = [];
+                if (window.AppBackendVercel) {
+                    records = await window.AppBackendVercel.api.getAttendanceByCourse(selectedCourse.id);
+                }
+
+                // Then try Firestore
+                if (!records || records.length === 0) {
+                    if (window.AppBackend) {
+                    const ok = await window.AppBackend.init();
+                    if (ok && window.AppBackend.api.isEnabled()) {
+                        records = await window.AppBackend.api.getAttendanceByCourse(selectedCourse.id);
+                    }
+                    }
+                }
+
+                // Fallback to localStorage
+                if (!records || records.length === 0) {
+                    records = JSON.parse(localStorage.getItem('attendanceData') || '[]')
+                        .filter(r => r.course_id === selectedCourse.id);
+                }
+
+                attendanceData = records;
+                populateWeekSelect();
+
+                if (attendanceData.length === 0) {
+                    document.getElementById('reportContent').innerHTML = 
+                        '<div class="no-data">No attendance records found. Please take attendance first.</div>';
+                }
+            } catch (error) {
+                console.error('Error loading data:', error);
+                alert('Error loading data');
+            }
+        }
+
+        // Populate week select dropdown
+        function populateWeekSelect() {
+            const weekSelect = document.getElementById('weekSelect');
+            const weeks = getAvailableWeeks();
+            
+            weeks.forEach(week => {
+                const option = document.createElement('option');
+                option.value = `${week.start}-${week.end}`;
+                option.textContent = `Week of ${formatDate(week.start)}`;
+                weekSelect.appendChild(option);
+            });
+        }
+
+        // Get available weeks from attendance data
+        function getAvailableWeeks() {
+            const dates = attendanceData.map(record => new Date(record.date));
+            if (dates.length === 0) return [];
+
+            const weeks = new Set();
+            dates.forEach(date => {
+                const weekStart = getWeekStart(date);
+                const weekEnd = getWeekEnd(date);
+                weeks.add(JSON.stringify({ start: weekStart, end: weekEnd }));
+            });
+
+            return Array.from(weeks).map(weekStr => JSON.parse(weekStr))
+                .sort((a, b) => new Date(a.start) - new Date(b.start));
+        }
+
+        // Get start of week (Monday)
+        function getWeekStart(date) {
+            const d = new Date(date);
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+            return new Date(d.setDate(diff)).toISOString().split('T')[0];
+        }
+
+        // Get end of week (Sunday)
+        function getWeekEnd(date) {
+            const weekStart = getWeekStart(date);
+            const end = new Date(weekStart);
+            end.setDate(end.getDate() + 6);
+            return end.toISOString().split('T')[0];
+        }
+
+        // Format date for display
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric' 
+            });
+        }
+
+        // Update custom range
+        function updateCustomRange() {
+            const startDate = document.getElementById('customStartDate').value;
+            const endDate = document.getElementById('customEndDate').value;
+            
+            if (startDate && endDate) {
+                document.getElementById('weekSelect').value = '';
+                generateReport(startDate, endDate);
+            }
+        }
+
+        // Generate report
+        function generateReport(startDate = null, endDate = null) {
+            let reportData = [];
+            
+            if (startDate && endDate) {
+                // Custom date range
+                reportData = attendanceData.filter(record => {
+                    const recordDate = new Date(record.date);
+                    return recordDate >= new Date(startDate) && recordDate <= new Date(endDate);
+                });
+            } else {
+                // Selected week
+                const weekValue = document.getElementById('weekSelect').value;
+                if (!weekValue) return;
+                
+                const [weekStart, weekEnd] = weekValue.split('-');
+                reportData = attendanceData.filter(record => {
+                    const recordDate = new Date(record.date);
+                    return recordDate >= new Date(weekStart) && recordDate <= new Date(weekEnd);
+                });
+            }
+
+            displayReport(reportData, startDate, endDate);
+        }
+
+        // Display report
+        function displayReport(reportData, startDate, endDate) {
+            const reportContent = document.getElementById('reportContent');
+            const downloadBtn = document.getElementById('downloadBtn');
+
+            if (reportData.length === 0) {
+                reportContent.innerHTML = '<div class="no-data">No attendance data found for the selected period.</div>';
+                downloadBtn.style.display = 'none';
+                return;
+            }
+
+            // Calculate summary statistics
+            const totalClasses = reportData.length;
+            const totalStudents = selectedCourse.students.length;
+            const totalAttendanceRecords = reportData.reduce((sum, record) => sum + record.students.length, 0);
+            const totalPresent = reportData.reduce((sum, record) => 
+                sum + record.students.filter(s => s.status === 'present').length, 0);
+            const totalAbsent = reportData.reduce((sum, record) => 
+                sum + record.students.filter(s => s.status === 'absent').length, 0);
+            const averageAttendance = totalClasses > 0 ? ((totalPresent / totalAttendanceRecords) * 100).toFixed(1) : 0;
+
+            // Group by date
+            const dailyData = {};
+            reportData.forEach(record => {
+                dailyData[record.date] = record;
+            });
+
+            const dateRange = startDate && endDate ? 
+                `${formatDate(startDate)} - ${formatDate(endDate)}` :
+                `Week of ${formatDate(Object.keys(dailyData)[0])}`;
+
+            reportContent.innerHTML = `
+                <div class="report-header">
+                    <h2>Weekly Attendance Report</h2>
+                    <p>${selectedCourse.name} (${selectedCourse.code})</p>
+                    <p>${dateRange}</p>
+                </div>
+
+                <div class="report-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">Faculty</span>
+                        <span class="meta-value">${currentFaculty.name}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Course</span>
+                        <span class="meta-value">${selectedCourse.name}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Report Period</span>
+                        <span class="meta-value">${dateRange}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Generated</span>
+                        <span class="meta-value">${new Date().toLocaleDateString()}</span>
+                    </div>
+                </div>
+
+                <div class="attendance-summary">
+                    <h3>Summary</h3>
+                    <div class="summary-grid">
+                        <div class="summary-card">
+                            <div class="summary-number">${totalClasses}</div>
+                            <div class="summary-label">Classes Held</div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-number">${totalStudents}</div>
+                            <div class="summary-label">Total Students</div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-number">${totalPresent}</div>
+                            <div class="summary-label">Present Records</div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-number">${totalAbsent}</div>
+                            <div class="summary-label">Absent Records</div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-number">${averageAttendance}%</div>
+                            <div class="summary-label">Avg Attendance</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="daily-breakdown">
+                    <h3>Daily Breakdown</h3>
+                    ${Object.keys(dailyData).sort().map(date => {
+                        const record = dailyData[date];
+                        const presentCount = record.students.filter(s => s.status === 'present').length;
+                        const absentCount = record.students.filter(s => s.status === 'absent').length;
+                        
+                        return `
+                            <div class="day-card">
+                                <div class="day-header">
+                                    <span class="day-date">${formatDate(date)}</span>
+                                    <span class="day-stats">Present: ${presentCount} | Absent: ${absentCount}</span>
+                                </div>
+                                <div class="day-students">
+                                    ${record.students.map(student => `
+                                        <div class="student-item">
+                                            <span>${student.student_name} (${student.roll_number})</span>
+                                            <span class="status-badge status-${student.status}">${student.status}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+
+                <div class="attendance-details">
+                    <h3>Detailed Attendance Records</h3>
+                    <table class="attendance-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Student Name</th>
+                                <th>Roll Number</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${reportData.flatMap(record => 
+                                record.students.map(student => `
+                                    <tr>
+                                        <td>${formatDate(record.date)}</td>
+                                        <td>${student.student_name}</td>
+                                        <td>${student.roll_number}</td>
+                                        <td><span class="status-badge status-${student.status}">${student.status}</span></td>
+                                    </tr>
+                                `)
+                            ).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            downloadBtn.style.display = 'inline-block';
+        }
+
+        // Download PDF
+        async function downloadPDF() {
+            const reportContent = document.getElementById('reportContent');
+            const { jsPDF } = window.jspdf;
+            
+            try {
+                // Create canvas from HTML content
+                const canvas = await html2canvas(reportContent, {
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true
+                });
+                
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                
+                const imgWidth = 210;
+                const pageHeight = 295;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                let heightLeft = imgHeight;
+                
+                let position = 0;
+                
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                
+                const fileName = `attendance_report_${selectedCourse.code}_${new Date().toISOString().split('T')[0]}.pdf`;
+                pdf.save(fileName);
+                
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                alert('Error generating PDF. Please try again.');
+            }
+        }
+
+        // Navigation functions
+        function goBack() {
+            window.location.href = 'course-details.html';
+        }
+
+        function logout() {
+            sessionStorage.removeItem('currentFaculty');
+            sessionStorage.removeItem('selectedCourseId');
+            window.location.href = 'faculty-login.html';
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+        });
+    </script>
+</body>
+</html>

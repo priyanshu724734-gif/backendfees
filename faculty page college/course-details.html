@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Details - College Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+        }
+
+        .back-btn, .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-left: 0.5rem;
+        }
+
+        .back-btn:hover, .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .course-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .course-header h2 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .course-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .info-value {
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(86, 171, 47, 0.3);
+        }
+
+        .students-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header h3 {
+            color: #667eea;
+        }
+
+        .students-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .student-card {
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .student-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+        }
+
+        .student-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .student-details {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .student-details p {
+            margin-bottom: 0.25rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .no-students {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 2rem;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #e1e5e9;
+            padding-bottom: 1rem;
+        }
+
+        .modal-header h3 {
+            color: #667eea;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .attendance-form {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input[type="date"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .attendance-list {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 2px solid #e1e5e9;
+            border-radius: 5px;
+            padding: 1rem;
+        }
+
+        .attendance-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .attendance-item:last-child {
+            border-bottom: none;
+        }
+
+        .student-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .student-info .name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .student-info .roll {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            transform: scale(1.2);
+        }
+
+        .select-all {
+            background: #f8f9fa;
+            padding: 0.75rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .select-all-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 0.5rem;
+        }
+
+        .select-all-btn:hover {
+            background: #5a6fd8;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 1rem;
+            }
+            
+            .course-header,
+            .students-section {
+                padding: 1rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .students-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                margin: 10% auto;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Course Details</h1>
+        <div>
+            <button class="back-btn" onclick="goBack()">← Back</button>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="course-header">
+            <h2 id="courseTitle">Loading...</h2>
+            <div class="course-info" id="courseInfo">
+                <div class="loading">Loading course information...</div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="openAttendanceModal()">Take Attendance</button>
+                <button class="btn btn-success" onclick="openWeeklyReport()">Weekly Report</button>
+            </div>
+        </div>
+
+        <div class="students-section">
+            <div class="section-header">
+                <h3>Registered Students</h3>
+                <span id="studentCount">0 students</span>
+            </div>
+            <div id="studentsList">
+                <div class="loading">Loading students...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attendance Modal -->
+    <div id="attendanceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Take Attendance</h3>
+                <span class="close" onclick="closeAttendanceModal()">&times;</span>
+            </div>
+            
+            <form class="attendance-form">
+                <div class="form-group">
+                    <label for="attendanceDate">Date:</label>
+                    <input type="date" id="attendanceDate" required>
+                </div>
+            </form>
+
+            <div class="select-all">
+                <button type="button" class="select-all-btn" onclick="selectAllStudents()">Select All</button>
+                <button type="button" class="select-all-btn" onclick="deselectAllStudents()">Deselect All</button>
+            </div>
+
+            <div class="attendance-list" id="attendanceList">
+                <!-- Attendance list will be populated here -->
+            </div>
+
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <button class="btn btn-primary" onclick="submitAttendance()">Submit Attendance</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/config.js"></script>
+    <script src="scripts/backend.js"></script>
+    <script src="scripts/firebase.js"></script>
+    <script>
+        let currentFaculty = null;
+        let selectedCourse = null;
+        let courseStudents = [];
+        let allStudents = [];
+
+        // Check authentication and load data
+        function checkAuth() {
+            const facultyData = sessionStorage.getItem('currentFaculty');
+            const courseId = sessionStorage.getItem('selectedCourseId');
+            
+            if (!facultyData || !courseId) {
+                window.location.href = 'faculty-login.html';
+                return;
+            }
+            
+            currentFaculty = JSON.parse(facultyData);
+            loadCourseData(courseId);
+        }
+
+        // Load course and student data
+        async function loadCourseData(courseId) {
+            try {
+                const [coursesResponse, studentsResponse] = await Promise.all([
+                    fetch('database/courses.json'),
+                    fetch('database/students.json')
+                ]);
+
+                const courses = await coursesResponse.json();
+                allStudents = await studentsResponse.json();
+
+                selectedCourse = courses.find(course => course.id == courseId);
+                
+                if (!selectedCourse) {
+                    alert('Course not found');
+                    window.location.href = 'faculty-dashboard.html';
+                    return;
+                }
+
+                // Get students for this course
+                courseStudents = allStudents.filter(student => 
+                    selectedCourse.students.includes(student.id)
+                );
+
+                displayCourseInfo();
+                displayStudents();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                alert('Error loading course data');
+            }
+        }
+
+        // Display course information
+        function displayCourseInfo() {
+            document.getElementById('courseTitle').textContent = selectedCourse.name;
+            
+            document.getElementById('courseInfo').innerHTML = `
+                <div class="info-item">
+                    <span class="info-label">Course Code</span>
+                    <span class="info-value">${selectedCourse.code}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Credits</span>
+                    <span class="info-value">${selectedCourse.credits}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Semester</span>
+                    <span class="info-value">${selectedCourse.semester}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Schedule</span>
+                    <span class="info-value">${selectedCourse.schedule}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Description</span>
+                    <span class="info-value">${selectedCourse.description}</span>
+                </div>
+            `;
+        }
+
+        // Display students
+        function displayStudents() {
+            document.getElementById('studentCount').textContent = `${courseStudents.length} students`;
+            
+            if (courseStudents.length === 0) {
+                document.getElementById('studentsList').innerHTML = 
+                    '<div class="no-students">No students registered for this course.</div>';
+                return;
+            }
+
+            document.getElementById('studentsList').innerHTML = `
+                <div class="students-grid">
+                    ${courseStudents.map(student => `
+                        <div class="student-card">
+                            <div class="student-name">${student.name}</div>
+                            <div class="student-details">
+                                <p><strong>Roll Number:</strong> ${student.roll_number}</p>
+                                <p><strong>Email:</strong> ${student.email}</p>
+                                <p><strong>Year:</strong> ${student.year}</p>
+                                <p><strong>Department:</strong> ${student.department}</p>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Open attendance modal
+        function openAttendanceModal() {
+            // Set today's date as default
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('attendanceDate').value = today;
+            
+            // Populate attendance list
+            const attendanceList = document.getElementById('attendanceList');
+            attendanceList.innerHTML = courseStudents.map(student => `
+                <div class="attendance-item">
+                    <div class="student-info">
+                        <span class="name">${student.name}</span>
+                        <span class="roll">${student.roll_number}</span>
+                    </div>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="present_${student.id}" value="${student.id}">
+                            <label for="present_${student.id}">Present</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="absent_${student.id}" value="${student.id}">
+                            <label for="absent_${student.id}">Absent</label>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Add event listeners for mutual exclusivity
+            courseStudents.forEach(student => {
+                const presentCheckbox = document.getElementById(`present_${student.id}`);
+                const absentCheckbox = document.getElementById(`absent_${student.id}`);
+                
+                presentCheckbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        absentCheckbox.checked = false;
+                    }
+                });
+                
+                absentCheckbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        presentCheckbox.checked = false;
+                    }
+                });
+            });
+
+            document.getElementById('attendanceModal').style.display = 'block';
+        }
+
+        // Close attendance modal
+        function closeAttendanceModal() {
+            document.getElementById('attendanceModal').style.display = 'none';
+        }
+
+        // Select all students as present
+        function selectAllStudents() {
+            courseStudents.forEach(student => {
+                document.getElementById(`present_${student.id}`).checked = true;
+                document.getElementById(`absent_${student.id}`).checked = false;
+            });
+        }
+
+        // Deselect all students
+        function deselectAllStudents() {
+            courseStudents.forEach(student => {
+                document.getElementById(`present_${student.id}`).checked = false;
+                document.getElementById(`absent_${student.id}`).checked = false;
+            });
+        }
+
+        // Submit attendance
+        async function submitAttendance() {
+            const date = document.getElementById('attendanceDate').value;
+            
+            if (!date) {
+                alert('Please select a date');
+                return;
+            }
+
+            const attendance = [];
+            
+            courseStudents.forEach(student => {
+                const presentCheckbox = document.getElementById(`present_${student.id}`);
+                const absentCheckbox = document.getElementById(`absent_${student.id}`);
+                
+                if (presentCheckbox.checked || absentCheckbox.checked) {
+                    attendance.push({
+                        student_id: student.id,
+                        student_name: student.name,
+                        roll_number: student.roll_number,
+                        status: presentCheckbox.checked ? 'present' : 'absent',
+                        date: date
+                    });
+                }
+            });
+
+            if (attendance.length === 0) {
+                alert('Please mark attendance for at least one student');
+                return;
+            }
+
+            try {
+                // Create record
+                const attendanceRecord = {
+                    id: Date.now(),
+                    course_id: selectedCourse.id,
+                    course_name: selectedCourse.name,
+                    course_code: selectedCourse.code,
+                    faculty_id: currentFaculty.id,
+                    faculty_name: currentFaculty.name,
+                    date: date,
+                    students: attendance,
+                    created_at: new Date().toISOString()
+                };
+
+                // Try Vercel API (Upstash) first
+                let savedToCloud = false;
+                if (window.AppBackendVercel) {
+                    savedToCloud = await window.AppBackendVercel.api.saveAttendance(attendanceRecord);
+                }
+
+                // Then try Firestore
+                if (!savedToCloud && window.AppBackend) {
+                    const ok = await window.AppBackend.init();
+                    if (ok && window.AppBackend.api.isEnabled()) {
+                        savedToCloud = await window.AppBackend.api.saveAttendance(attendanceRecord);
+                    }
+                }
+
+                if (!savedToCloud) {
+                    // Fallback to localStorage upsert
+                    let attendanceData = JSON.parse(localStorage.getItem('attendanceData') || '[]');
+                    const existingIndex = attendanceData.findIndex(
+                        record => record.date === date && record.course_id === selectedCourse.id
+                    );
+                    if (existingIndex !== -1) {
+                        attendanceData[existingIndex] = attendanceRecord;
+                    } else {
+                        attendanceData.push(attendanceRecord);
+                    }
+                    localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
+                }
+
+                alert(`Attendance ${savedToCloud ? 'saved to cloud and' : ''} recorded successfully for ${attendance.length} students on ${date}`);
+                closeAttendanceModal();
+            } catch (error) {
+                console.error('Error submitting attendance:', error);
+                alert('Error submitting attendance. Please try again.');
+            }
+        }
+
+        // Open weekly report
+        function openWeeklyReport() {
+            window.location.href = 'weekly-report.html';
+        }
+
+        // Navigation functions
+        function goBack() {
+            window.location.href = 'faculty-dashboard.html';
+        }
+
+        function logout() {
+            sessionStorage.removeItem('currentFaculty');
+            sessionStorage.removeItem('selectedCourseId');
+            window.location.href = 'faculty-login.html';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('attendanceModal');
+            if (event.target == modal) {
+                closeAttendanceModal();
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+        });
+    </script>
+</body>
+</html>

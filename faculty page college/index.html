@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+        }
+
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature {
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .feature h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .demo-info {
+            background: #e8f4f8;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .demo-info h4 {
+            color: #0c5460;
+            margin-bottom: 0.5rem;
+        }
+
+        .demo-info p {
+            color: #0c5460;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🎓</div>
+        <h1>College Management System</h1>
+        <p class="subtitle">
+            A comprehensive faculty management system for tracking courses, students, and attendance.
+        </p>
+
+        <div class="features">
+            <div class="feature">
+                <h3>📚 Course Management</h3>
+                <p>Manage your assigned courses and view registered students</p>
+            </div>
+            <div class="feature">
+                <h3>📝 Attendance Tracking</h3>
+                <p>Take attendance with easy-to-use interface and bulk selection</p>
+            </div>
+            <div class="feature">
+                <h3>📊 Weekly Reports</h3>
+                <p>Generate detailed attendance reports with PDF download</p>
+            </div>
+        </div>
+
+        <a href="faculty-login.html" class="login-btn">
+            Faculty Login →
+        </a>
+
+        <div class="demo-info">
+            <h4>Demo Credentials</h4>
+            <p><strong>Dr. Sarah Johnson:</strong> sarah.johnson@college.edu / faculty123</p>
+            <p><strong>Prof. Michael Chen:</strong> michael.chen@college.edu / faculty123</p>
+            <p><strong>Dr. Emily Rodriguez:</strong> emily.rodriguez@college.edu / faculty123</p>
+        </div>
+    </div>
+</body>
+</html>

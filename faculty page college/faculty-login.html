@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Login - College Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-header h1 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 0.75rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .demo-credentials {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .demo-credentials h4 {
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .demo-credentials p {
+            margin-bottom: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Faculty Login</h1>
+            <p>College Management System</p>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+
+        <div class="demo-credentials">
+            <h4>Demo Credentials:</h4>
+            <p><strong>Dr. Sarah Johnson:</strong> sarah.johnson@college.edu / faculty123</p>
+            <p><strong>Prof. Michael Chen:</strong> michael.chen@college.edu / faculty123</p>
+            <p><strong>Dr. Emily Rodriguez:</strong> emily.rodriguez@college.edu / faculty123</p>
+        </div>
+    </div>
+
+    <script src="scripts/config.js"></script>
+    <script src="scripts/backend.js"></script>
+    <script src="scripts/firebase.js"></script>
+    <script>
+        async function loginWithVercelAPI(email, password) {
+            try {
+                if (!window.AppBackendVercel) return null;
+                const profile = await window.AppBackendVercel.api.login(email, password);
+                return profile || null;
+            } catch (_) { return null; }
+        }
+
+        async function loginWithBackend(email, password) {
+            try {
+                if (!window.AppBackend) return false;
+                const ok = await window.AppBackend.init();
+                if (!ok || !window.AppBackend.api.isEnabled()) return false;
+
+                const user = await window.AppBackend.api.signInWithEmailPassword(email, password);
+                if (!user) return false;
+
+                // fetch faculty profile by email
+                const profile = await window.AppBackend.api.getFacultyByEmail(email);
+                if (!profile) return false;
+
+                sessionStorage.setItem('currentFaculty', JSON.stringify(profile));
+                window.location.href = 'faculty-dashboard.html';
+                return true;
+            } catch (_) {
+                return false;
+            }
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Try Vercel API (Upstash), then Firebase, then JSON fallback
+            const vercelProfile = await loginWithVercelAPI(email, password);
+            if (vercelProfile) {
+                sessionStorage.setItem('currentFaculty', JSON.stringify(vercelProfile));
+                window.location.href = 'faculty-dashboard.html';
+                return;
+            }
+
+            const usedBackend = await loginWithBackend(email, password);
+            if (usedBackend) return;
+
+            fetch('database/faculty.json')
+                .then(response => response.json())
+                .then(faculty => {
+                    const user = faculty.find(f => f.email === email && f.password === password);
+                    if (user) {
+                        sessionStorage.setItem('currentFaculty', JSON.stringify(user));
+                        window.location.href = 'faculty-dashboard.html';
+                    } else {
+                        errorMessage.textContent = 'Invalid email or password';
+                        errorMessage.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    errorMessage.textContent = 'Login failed. Please try again.';
+                    errorMessage.style.display = 'block';
+                });
+        });
+    </script>
+</body>
+</html>

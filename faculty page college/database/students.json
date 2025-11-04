@@ -1,0 +1,266 @@
+[
+  {
+    "id": 1,
+    "name": "John Smith",
+    "email": "john.smith@student.edu",
+    "roll_number": "CS2024001",
+    "year": 3,
+    "department": "Computer Science"
+  },
+  {
+    "id": 2,
+    "name": "Alice Johnson",
+    "email": "alice.johnson@student.edu",
+    "roll_number": "CS2024002",
+    "year": 3,
+    "department": "Computer Science"
+  },
+  {
+    "id": 3,
+    "name": "Bob Wilson",
+    "email": "bob.wilson@student.edu",
+    "roll_number": "CS2024003",
+    "year": 3,
+    "department": "Computer Science"
+  },
+  {
+    "id": 4,
+    "name": "Carol Davis",
+    "email": "carol.davis@student.edu",
+    "roll_number": "CS2024004",
+    "year": 3,
+    "department": "Computer Science"
+  },
+  {
+    "id": 5,
+    "name": "David Brown",
+    "email": "david.brown@student.edu",
+    "roll_number": "CS2024005",
+    "year": 3,
+    "department": "Computer Science"
+  },
+  {
+    "id": 6,
+    "name": "Emma Taylor",
+    "email": "emma.taylor@student.edu",
+    "roll_number": "CS2024006",
+    "year": 3,
+    "department": "Computer Science"
+  },
+  {
+    "id": 7,
+    "name": "Frank Miller",
+    "email": "frank.miller@student.edu",
+    "roll_number": "CS2024007",
+    "year": 3,
+    "department": "Computer Science"
+  },
+  {
+    "id": 8,
+    "name": "Grace Lee",
+    "email": "grace.lee@student.edu",
+    "roll_number": "CS2024008",
+    "year": 3,
+    "department": "Computer Science"
+  },
+  {
+    "id": 9,
+    "name": "Henry Garcia",
+    "email": "henry.garcia@student.edu",
+    "roll_number": "CS2024009",
+    "year": 3,
+    "department": "Computer Science"
+  },
+  {
+    "id": 10,
+    "name": "Ivy Martinez",
+    "email": "ivy.martinez@student.edu",
+    "roll_number": "CS2024010",
+    "year": 3,
+    "department": "Computer Science"
+  },
+  {
+    "id": 11,
+    "name": "Jack Anderson",
+    "email": "jack.anderson@student.edu",
+    "roll_number": "MATH2024001",
+    "year": 3,
+    "department": "Mathematics"
+  },
+  {
+    "id": 12,
+    "name": "Kate Thompson",
+    "email": "kate.thompson@student.edu",
+    "roll_number": "MATH2024002",
+    "year": 3,
+    "department": "Mathematics"
+  },
+  {
+    "id": 13,
+    "name": "Liam White",
+    "email": "liam.white@student.edu",
+    "roll_number": "MATH2024003",
+    "year": 3,
+    "department": "Mathematics"
+  },
+  {
+    "id": 14,
+    "name": "Mia Harris",
+    "email": "mia.harris@student.edu",
+    "roll_number": "MATH2024004",
+    "year": 3,
+    "department": "Mathematics"
+  },
+  {
+    "id": 15,
+    "name": "Noah Clark",
+    "email": "noah.clark@student.edu",
+    "roll_number": "MATH2024005",
+    "year": 3,
+    "department": "Mathematics"
+  },
+  {
+    "id": 16,
+    "name": "Olivia Lewis",
+    "email": "olivia.lewis@student.edu",
+    "roll_number": "MATH2024006",
+    "year": 3,
+    "department": "Mathematics"
+  },
+  {
+    "id": 17,
+    "name": "Peter Walker",
+    "email": "peter.walker@student.edu",
+    "roll_number": "MATH2024007",
+    "year": 3,
+    "department": "Mathematics"
+  },
+  {
+    "id": 18,
+    "name": "Quinn Hall",
+    "email": "quinn.hall@student.edu",
+    "roll_number": "MATH2024008",
+    "year": 3,
+    "department": "Mathematics"
+  },
+  {
+    "id": 19,
+    "name": "Rachel Young",
+    "email": "rachel.young@student.edu",
+    "roll_number": "MATH2024009",
+    "year": 3,
+    "department": "Mathematics"
+  },
+  {
+    "id": 20,
+    "name": "Sam King",
+    "email": "sam.king@student.edu",
+    "roll_number": "MATH2024010",
+    "year": 3,
+    "department": "Mathematics"
+  },
+  {
+    "id": 21,
+    "name": "Tina Wright",
+    "email": "tina.wright@student.edu",
+    "roll_number": "PHYS2024001",
+    "year": 4,
+    "department": "Physics"
+  },
+  {
+    "id": 22,
+    "name": "Uma Lopez",
+    "email": "uma.lopez@student.edu",
+    "roll_number": "PHYS2024002",
+    "year": 4,
+    "department": "Physics"
+  },
+  {
+    "id": 23,
+    "name": "Victor Hill",
+    "email": "victor.hill@student.edu",
+    "roll_number": "PHYS2024003",
+    "year": 4,
+    "department": "Physics"
+  },
+  {
+    "id": 24,
+    "name": "Wendy Scott",
+    "email": "wendy.scott@student.edu",
+    "roll_number": "PHYS2024004",
+    "year": 4,
+    "department": "Physics"
+  },
+  {
+    "id": 25,
+    "name": "Xavier Green",
+    "email": "xavier.green@student.edu",
+    "roll_number": "PHYS2024005",
+    "year": 4,
+    "department": "Physics"
+  },
+  {
+    "id": 26,
+    "name": "Yara Adams",
+    "email": "yara.adams@student.edu",
+    "roll_number": "PHYS2024006",
+    "year": 4,
+    "department": "Physics"
+  },
+  {
+    "id": 27,
+    "name": "Zoe Baker",
+    "email": "zoe.baker@student.edu",
+    "roll_number": "PHYS2024007",
+    "year": 4,
+    "department": "Physics"
+  },
+  {
+    "id": 28,
+    "name": "Aaron Nelson",
+    "email": "aaron.nelson@student.edu",
+    "roll_number": "PHYS2024008",
+    "year": 4,
+    "department": "Physics"
+  },
+  {
+    "id": 29,
+    "name": "Bella Carter",
+    "email": "bella.carter@student.edu",
+    "roll_number": "PHYS2024009",
+    "year": 4,
+    "department": "Physics"
+  },
+  {
+    "id": 30,
+    "name": "Caleb Mitchell",
+    "email": "caleb.mitchell@student.edu",
+    "roll_number": "PHYS2024010",
+    "year": 4,
+    "department": "Physics"
+  },
+  {
+    "id": 31,
+    "name": "rajveer",
+    "email": "john.smith@student.edu",
+    "roll_number": "22113112",
+    "year": 4,
+    "department": "civil"
+  },
+  {
+    "id": 32,
+    "name": "manish",
+    "email": "alice.johnson@student.edu",
+    "roll_number": "22113113",
+    "year": 4,
+    "department": "civil"
+  },
+  {
+    "id": 33,
+    "name": "rohit",
+    "email": "bob.wilson@student.edu",
+    "roll_number": "22113114",
+    "year": 4,
+    "department": "civil"
+  }
+]

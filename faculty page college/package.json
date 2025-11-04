@@ -1,0 +1,10 @@
+{
+  "name": "college-faculty-management",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  }
+}
+
+
